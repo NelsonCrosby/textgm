@@ -1,0 +1,24 @@
+{
+  "name": "textgm",
+  "version": "0.0.0",
+  "description": "A Discord bot for playing text adventures",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node -r dotenv/config index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nelsoncrosby/textgm.git"
+  },
+  "author": "Nelson Crosby <nelsonc@sourcecomb.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nelsoncrosby/textgm/issues"
+  },
+  "homepage": "https://github.com/nelsoncrosby/textgm#readme",
+  "dependencies": {
+    "discord.js": "^9.3.0",
+    "dotenv": "^2.0.0"
+  }
+}
