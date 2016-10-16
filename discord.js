@@ -13,7 +13,12 @@ const commands = {
   },
 
   '.start-game'(game) {
-    log('Starting', game)
+    this.channel.sendMessage(`@here Starting game ${game}...`)
+    games[this.channel.id] = {
+      send(info) {
+        log(info)
+      }
+    }
   }
 }
 
@@ -28,8 +33,17 @@ client.on('message', (msg) => {
     let args = shlex.parse(msg.content)
     let cmd = args.shift()
     commands[cmd].apply(msg, args)
-  } else {
-    log(msg.content)
+  } else if (msg.author.id !== client.user.id) {
+    let game = games[msg.channel.id]
+    if (game != null) {
+      game.send({
+        content: msg.content,
+        sender: {
+          id: msg.author.id,
+          nick: msg.author.username
+        }
+      })
+    }
   }
 })
 
