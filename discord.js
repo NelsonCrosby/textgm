@@ -2,7 +2,6 @@
 
 const log = require('debug')('textgm:discord')
 const Discord = require('discord.js')
-const shlex = require('shell-quote')
 
 const Game = require('./game')
 
@@ -45,10 +44,16 @@ const commands = {
         + `The following **commands** manipulate the game `
         + `running in this channel:\n\n`
         + "- `.help` displays this help text.\n"
+        + "- `.source` gives you a link to textgm's source code.\n"
         + "- `.start-game <game name>` starts a new game "
         + `in this channel.\n`
         + "- `.game-set <key> <value>` sets an option on "
         + `the current game runner.\n`)
+  },
+
+  '.source'(who) {
+    who = who || `<@!${this.author.id}>`
+    this.channel.sendMessage(`${who}: https://github.com/NelsonCrosby/textgm`)
   },
 
   '.start-game'(name) {
@@ -89,7 +94,7 @@ client.on('ready', () => {
 client.on('message', (msg) => {
   let { content, author } = msg
   if (content.startsWith('.')) {
-    let args = shlex.parse(content)
+    let args = content.split(' ')
     let cmd = args.shift()
     commands[cmd].apply(msg, args)
   } else if (author.id !== client.user.id
