@@ -23,8 +23,32 @@ function onGameReply(chan, sender, msg) {
 
 const commands = {
   '.help'() {
-    this.reply(`
-.start-game <game>`)
+    this.channel.sendMessage(`<@!${this.author.id}>\n`
+        + `**Help for textgm:**\n\n`
+        + `Welcome to textgm - a bot allowing you to play `
+        + `text adventures in Discord! You can play a game `
+        + `in any channel on this server using the `
+        + "`.start-game` command (see below). Each channel "
+        + `can one run game, and each channel's game is `
+        + `separate from games in other channels.\n\n`
+        + `Messages sent while a game is running won't `
+        + `automatically be processed. This allows you to `
+        + `coordinate with other players in the channel easily. `
+        + `To send a command to the game, prefix your message `
+        + "with a `>` (optionally with spaces after it). "
+        + `Note that only the first line will be sent to `
+        + `the game - if you enter multiple lines the rest `
+        + `will be ignored.\n\n`
+        + `Each game will likely have slightly different `
+        + "command capabilities - use `>HELP` to see how "
+        + `a particular game works.\n\n`
+        + `The following **commands** manipulate the game `
+        + `running in this channel:\n\n`
+        + "- `.help` displays this help text.\n"
+        + "- `.start-game <game name>` starts a new game "
+        + `in this channel.\n`
+        + "- `.game-set <key> <value>` sets an option on "
+        + `the current game runner.\n`)
   },
 
   '.start-game'(name) {
