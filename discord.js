@@ -38,6 +38,24 @@ const commands = {
     return game.start()
       .then(() => channel.sendMessage('@here Game started'))
   },
+
+  '.game-set'(k, v) {
+    let game = games[this.channel.id]
+    if (game == null) {
+      this.reply('there is no game running!')
+    } else {
+      try {
+        game.setOption(k, v)
+        this.reply(`${k} = ${game.getOption(k)}`)
+      } catch (e) {
+        if (e instanceof TypeError) {
+          this.reply(`${k} is not a valid key, or ${v} is not a valid value for ${k}.`)
+        } else {
+          throw e
+        }
+      }
+    }
+  },
 }
 
 client.on('ready', () => {
