@@ -9,10 +9,12 @@ const client = new Discord.Client()
 const games = {}
 
 function onGameUpdate(chan, msg) {
+  log('got message', chan.id, msg)
   chan.sendMessage(msg)
 }
 
 function onGameInfo(chan, msg) {
+  log('got info', chan.id, msg)
   chan.sendMessage(['***Info***', msg])
 }
 
@@ -59,7 +61,7 @@ const commands = {
   '.start-game'(name) {
     let channel = this.channel
     channel.sendMessage(`@here Starting game ${name}...`)
-    let game = new Game(name)
+    let game = new Game(channel.id, name)
     games[channel.id] = game
     game.on('update', msg => onGameUpdate(channel, msg))
     game.on('info', msg => onGameInfo(channel, msg))
