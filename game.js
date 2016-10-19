@@ -7,21 +7,40 @@ const log = require('debug')('textgm:game')
 
 const TOPDIR = 'DATA'
 
+function fspExists(dirname) {
+  return new Promise((resolve, reject) => {
+    fs.stat(dirname, (err) => {
+      if (err) resolve(false)
+      else resolve(true)
+    })
+  })
+}
+
+function fspMkdir(dirname) {
+  return new Promise((resolve, reject) => {
+    fs.mkdir(dirname, (err) => {
+      if (err) reject(err)
+      else resolve()
+    })
+  })
+}
+
+function fspEnsuredir(dirname) {
+  return fspExists(dirname).then(exists => exists || fspMkdir(dirname))
+}
+
 module.exports =
 class Game extends EventEmitter {
   constructor(chid, name) {
     super()
     this.name = name
+    this._wd = `${TOPDIR}/${chid}`
     this.options = {}
 
     this.on('message', this._onMessage)
 
-    this._startup = new Promise((resolve, reject) => {
-      fs.mkdir(`${TOPDIR}/${chid}`, (err) => {
-        if (err) reject(err)
-        else resolve()
-      })
-    }).then(() => { this.gamefile = `${TOPDIR}/games/${name}` })
+    this._startup = fspEnsuredir(this._wd)
+      .then(() => { this.gamefile = `../games/${name}` })
   }
 
   getOption(k) {
@@ -34,7 +53,9 @@ class Game extends EventEmitter {
 
   start() {
     return this._startup.then(() => {
-      let proc = cp.spawn('dfrotz', [ this.gamefile ])
+      let proc = cp.spawn('dfrotz', [ this.gamefile ], {
+        cwd: this._wd
+      })
       this.proc = proc
 
       proc.stdout.setEncoding('utf8')
